@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import xport
 
 
 class Person:
@@ -64,11 +65,11 @@ def load_smell_loss_data(year):
     Loads the smell loss data from the csv file and returns it as a pandas dataframe
     """
     if year == 2011:
-        data = pd.read_csv('2011_smell_loss_data.csv')
+        data = pd.read_csv('NHANES20112012/2011_smell_loss_data.csv')
     elif year == 2014:
-        data = pd.read_csv('2014_smell_loss_data.csv')
+        data = pd.read_csv('NHANES20132014/2014_smell_loss_data.csv')
     elif year == 2020 or year == 2021:
-        data = pd.read_csv('2020_2021_covid_smell_loss_data.csv')
+        data = pd.read_csv('GCCR002/data-clean.csv')
     else:
         raise ValueError("Invalid year provided")
 
