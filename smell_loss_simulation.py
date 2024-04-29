@@ -1,7 +1,5 @@
 import numpy as np
 import pandas as pd
-import xport
-
 
 class Person:
     def __init__(self, age, covid_status, location, congenital_smell_loss_prob=0.01):
@@ -119,7 +117,7 @@ def run_simulation(population_size, num_iterations, transmission_distance=10):
     total_population = len(population)
     smell_loss_percentage = (smell_loss_counts / total_population) * 100
 
-    return smell_loss_percentage
+    return smell_loss_percentage, population
 
 
 if __name__ == "__main__":
@@ -127,5 +125,5 @@ if __name__ == "__main__":
     iterations = 100
     infection_distance = 5
 
-    smell_loss = run_simulation(pop_size, iterations, infection_distance)
+    smell_loss, population = run_simulation(pop_size, iterations, infection_distance)
     print(f"Percentage of population with smell loss: {smell_loss:.2f}%")
