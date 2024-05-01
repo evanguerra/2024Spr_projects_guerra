@@ -9,6 +9,7 @@ class Person:
     """
     person_count = 0
     all_persons = []
+
     def __init__(self, age, location, infected_status='none'):
         Person.person_count += 1
         Person.all_persons.append(self)
@@ -89,9 +90,9 @@ def calculate_smell_loss_probability(year):
         case_data['Date_reported'] = pd.to_datetime(case_data['Date_reported'])
         filtered_data = case_data[(case_data['Country'] == 'United States of America') & (case_data['Date_reported'].dt.year <= year)]
         cases = filtered_data['New_cases'].sum()
-        
+
         smell_loss_data = data['Symptoms_changes_in_smell']
-        smell_loss_count = smell_loss_data.sum()  # Number of instances with smell loss (Symptoms_changes_in_smell = 1)
+        smell_loss_count = smell_loss_data.sum()
         smell_loss_prob = (smell_loss_count / cases)*100
     else:
         smell_loss_prob = (data['CSQ010'] == 1).mean()
@@ -163,7 +164,7 @@ def run_simulation(population_size, num_iterations, transmission_distance=10, ye
         total_population = len(population)
         smell_loss_percentage = (smell_loss_count / total_population) * 100
         print(f"Iteration {_:>3}: Smell Loss Percentage: {smell_loss_percentage:.2f}%")
-        aggregate_stats.append((smell_loss_count, smell_loss_percentage))
+        aggregate_stats.append(smell_loss_percentage)
 
     return aggregate_stats, population
 
