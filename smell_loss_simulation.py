@@ -3,7 +3,15 @@ import pandas as pd
 
 
 class Person:
+    """
+    A class to represent a person in the smell loss simulation
+    Inspired by Mr.Weible's Player class from https://github.com/iSchool-597PR/2024Spr_examples/blob/main/unit_08/MC_rock_paper_scissors.py
+    """
+    person_count = 0
+    all_persons = []
     def __init__(self, age, location, infected_status='none'):
+        Person.person_count += 1
+        Person.all_persons.append(self)
         self.location = location
         self.age = age
         self.infected_status = infected_status
@@ -20,6 +28,24 @@ class Person:
             self.infected_status = virus_type
             if np.random.rand() < smell_loss_prob:
                 self.smell_loss = True
+
+    def reset_stats(self):
+        """From Mr.Weible's Player class from https://github.com/iSchool-597PR/2024Spr_examples/blob/main/unit_08/MC_rock_paper_scissors.py
+        """
+        self.infected_status = 'none'
+        self.congenital_smell_loss_prob = 0.01
+        self.smell_loss = False
+        self.is_smoker = False
+
+        if np.random.rand() < self.congenital_smell_loss_prob:
+            self.smell_loss = True
+
+    @staticmethod
+    def reset_all_stats():
+        """Resets all 'memory' or other counters in ALL Players, to prepare for
+        a new tournament unaffected by previous matches."""
+        for p in Person.all_persons:
+            p.reset_stats()
 
 
 def calculate_covid_infection_probability(year):
@@ -94,6 +120,8 @@ def run_simulation(population_size, num_iterations, transmission_distance=10, ye
     Run the simulation with the given population size and number of iterations and transmission distance
     """
     population = []
+    aggregate_stats = []
+
     if year == 2021:
         infection_prob = calculate_covid_infection_probability(year)
         virus = 'covid'
@@ -114,20 +142,22 @@ def run_simulation(population_size, num_iterations, transmission_distance=10, ye
 
     for _ in range(num_iterations):
         move_people(population)
+
         for i, person in enumerate(population):
-            for j, other_person in enumerate(population):
-                if i != j:
-                    if np.abs(person.location - other_person.location) <= transmission_distance:
-                        if person.infected_status != 'none':
-                            person.get_infected(virus, smell_loss_probability, infection_prob)
-                        elif other_person.infected_status != 'none':
-                            other_person.get_infected(virus, smell_loss_probability, infection_prob)
+            if person.infected_status == 'none':
+                for j, other_person in enumerate(population):
+                    if i != j:
+                        if np.abs(person.location - other_person.location) <= transmission_distance:
+                            if other_person.infected_status != 'none':
+                                person.get_infected(virus, smell_loss_probability, infection_prob)
 
-    smell_loss_counts = sum(person.smell_loss for person in population)
-    total_population = len(population)
-    smell_loss_percentage = (smell_loss_counts / total_population) * 100
+        smell_loss_count = sum(person.smell_loss for person in population)
+        total_population = len(population)
+        smell_loss_percentage = (smell_loss_count / total_population) * 100
+        print(f"Iteration {_:>3}: Smell Loss Percentage: {smell_loss_percentage:.2f}%")
+        aggregate_stats.append((smell_loss_count, smell_loss_percentage))
 
-    return smell_loss_percentage, population
+    return aggregate_stats, population
 
 
 if __name__ == "__main__":
@@ -136,10 +166,7 @@ if __name__ == "__main__":
     infection_distance = 5
 
     smell_loss, population = run_simulation(pop_size, iterations, infection_distance, year=2011)
-    print(f"Percentage of population with smell loss (Year 2011): {smell_loss:.2f}%")
 
     smell_loss, population = run_simulation(pop_size, iterations, infection_distance, year=2014)
-    print(f"Percentage of population with smell loss (Year 2014): {smell_loss:.2f}%")
 
     smell_loss, population = run_simulation(pop_size, iterations, infection_distance, year=2021)
-    print(f"Percentage of population with smell loss (Year 2021): {smell_loss:.2f}%")
