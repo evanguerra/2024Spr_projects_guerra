@@ -5,7 +5,8 @@ import pandas as pd
 class Person:
     """
     A class to represent a person in the smell loss simulation
-    Inspired by Mr.Weible's Player class from https://github.com/iSchool-597PR/2024Spr_examples/blob/main/unit_08/MC_rock_paper_scissors.py
+    Inspired by Mr.Weible's Player class from
+    https://github.com/iSchool-597PR/2024Spr_examples/blob/main/unit_08/MC_rock_paper_scissors.py
     """
     person_count = 0
     all_persons = []
@@ -31,7 +32,8 @@ class Person:
                 self.smell_loss = True
 
     def reset_stats(self):
-        """From Mr.Weible's Player class from https://github.com/iSchool-597PR/2024Spr_examples/blob/main/unit_08/MC_rock_paper_scissors.py
+        """From Mr.Weible's Player class from
+        https://github.com/iSchool-597PR/2024Spr_examples/blob/main/unit_08/MC_rock_paper_scissors.py
         """
         self.infected_status = 'none'
         self.congenital_smell_loss_prob = 0.01
@@ -54,12 +56,8 @@ def calculate_covid_infection_probability(year):
     Calculates the covid infection probability for a person
     :return: covid infection probability
     """
-    data = pd.read_csv('WHO-COVID-19-global-data.csv')
+    cases = load_case_data(year)
 
-    data['Date_reported'] = pd.to_datetime(data['Date_reported'])
-    filtered_data = data[(data['Country'] == 'United States of America') & (data['Date_reported'].dt.year <= year)]
-
-    cases = filtered_data['New_cases'].sum()
     covid_prob = (cases / 333271411)*100  # 2020-2022 estimated US population from census.gov
 
     return covid_prob
@@ -85,11 +83,7 @@ def calculate_smell_loss_probability(year):
     data = load_smell_loss_data(year)
 
     if year == 2021:
-        case_data = pd.read_csv('WHO-COVID-19-global-data.csv')
-
-        case_data['Date_reported'] = pd.to_datetime(case_data['Date_reported'])
-        filtered_data = case_data[(case_data['Country'] == 'United States of America') & (case_data['Date_reported'].dt.year <= year)]
-        cases = filtered_data['New_cases'].sum()
+        cases = load_case_data(year)
 
         smell_loss_data = data['Symptoms_changes_in_smell']
         smell_loss_count = smell_loss_data.sum()
@@ -114,6 +108,15 @@ def load_smell_loss_data(year):
         raise ValueError("Invalid year provided")
 
     return data
+
+
+def load_case_data(year):
+    data = pd.read_csv('WHO-COVID-19-global-data.csv')
+    data['Date_reported'] = pd.to_datetime(data['Date_reported'])
+    filtered_data = data[(data['Country'] == 'United States of America') & (data['Date_reported'].dt.year <= year)]
+    cases = filtered_data['New_cases'].sum()
+
+    return cases
 
 
 def move_people(population):
@@ -174,8 +177,8 @@ if __name__ == "__main__":
     iterations = 100
     infection_distance = 5
 
-    smell_loss, population = run_simulation(pop_size, iterations, infection_distance, year=2011)
+    run_simulation(pop_size, iterations, infection_distance, year=2011)
 
-    smell_loss, population = run_simulation(pop_size, iterations, infection_distance, year=2014)
+    run_simulation(pop_size, iterations, infection_distance, year=2014)
 
-    smell_loss, population = run_simulation(pop_size, iterations, infection_distance, year=2021)
+    run_simulation(pop_size, iterations, infection_distance, year=2021)
