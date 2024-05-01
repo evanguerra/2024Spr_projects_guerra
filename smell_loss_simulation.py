@@ -56,10 +56,10 @@ def calculate_covid_infection_probability(year):
     data = pd.read_csv('WHO-COVID-19-global-data.csv')
 
     data['Date_reported'] = pd.to_datetime(data['Date_reported'])
-    filtered_data = data[(data['Country'] == 'United States') & (data['Date_reported'].dt.year <= year)]
+    filtered_data = data[(data['Country'] == 'United States of America') & (data['Date_reported'].dt.year <= year)]
 
     cases = filtered_data['New_cases'].sum()
-    covid_prob = cases / 334998000
+    covid_prob = (cases / 333271411)*100  # 2020-2022 estimated US population from census.gov
 
     return covid_prob
 
@@ -84,7 +84,15 @@ def calculate_smell_loss_probability(year):
     data = load_smell_loss_data(year)
 
     if year == 2021:
-        smell_loss_prob = (data['Symptoms_changes_in_smell'] == 1).mean
+        case_data = pd.read_csv('WHO-COVID-19-global-data.csv')
+
+        case_data['Date_reported'] = pd.to_datetime(case_data['Date_reported'])
+        filtered_data = case_data[(case_data['Country'] == 'United States of America') & (case_data['Date_reported'].dt.year <= year)]
+        cases = filtered_data['New_cases'].sum()
+        
+        smell_loss_data = data['Symptoms_changes_in_smell']
+        smell_loss_count = smell_loss_data.sum()  # Number of instances with smell loss (Symptoms_changes_in_smell = 1)
+        smell_loss_prob = (smell_loss_count / cases)*100
     else:
         smell_loss_prob = (data['CSQ010'] == 1).mean()
 

@@ -7,7 +7,6 @@
     <list default="true" id="6eb82b7d-7934-4474-b96c-4256be8b007c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smell_loss_simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/smell_loss_simulation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/smell_loss_simulation_visualization.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/smell_loss_simulation_visualization.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +61,7 @@
       <workItem from="1714253160502" duration="1068000" />
       <workItem from="1714412756369" duration="4283000" />
       <workItem from="1714500315691" duration="10318000" />
-      <workItem from="1714521264478" duration="5247000" />
+      <workItem from="1714521264478" duration="7065000" />
     </task>
     <servers />
   </component>
@@ -70,6 +69,6 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/2024Spr_projects_guerra$smell_loss_simulation.coverage" NAME="smell_loss_simulation Coverage Results" MODIFIED="1714525594483" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/2024Spr_projects_guerra$smell_loss_simulation.coverage" NAME="smell_loss_simulation Coverage Results" MODIFIED="1714528444781" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
