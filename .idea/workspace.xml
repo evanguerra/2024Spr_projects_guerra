@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="6eb82b7d-7934-4474-b96c-4256be8b007c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/smell_loss_simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/smell_loss_simulation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smell_loss_simulation_visualization.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/smell_loss_simulation_visualization.ipynb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -69,7 +70,7 @@
       <workItem from="1714500315691" duration="10318000" />
       <workItem from="1714521264478" duration="9383000" />
       <workItem from="1714533125872" duration="4840000" />
-      <workItem from="1715113080233" duration="4296000" />
+      <workItem from="1715113080233" duration="5526000" />
     </task>
     <servers />
   </component>

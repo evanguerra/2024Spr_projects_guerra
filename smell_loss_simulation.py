@@ -144,6 +144,50 @@ def calculate_smell_loss_probability(year):
     return smell_loss_prob
 
 
+def calculate_taste_loss_probability(year):
+    """
+        Calculates the smell loss probability for a person based on the smell loss rate of the virus type
+        :param year: The year for the simulation
+        :return: smell loss probability
+        """
+    data = load_smell_loss_data(year)
+
+    if year == 2021:
+        cases = load_case_data(year)
+
+        columns_to_check = ['Changes_in_basic_tastes_sweet', 'Changes_in_basic_tastes_salty',
+                            'Changes_in_basic_tastes_sour', 'Changes_in_basic_tastes_bitter',
+                            'Changes_in_basic_tastes_savory/umami']
+        data['taste_loss'] = data[columns_to_check].any(axis=1).astype(int)
+        taste_loss_data = data['taste_loss']
+        taste_loss_count = taste_loss_data.sum()
+        taste_loss_prob = (taste_loss_count / cases)*100
+    else:
+        taste_loss_prob = (data['CSQ080'] == 1).mean()
+
+    return taste_loss_prob
+
+
+def calculate_flavor_loss_probability(year):
+    """
+        Calculates the smell loss probability for a person based on the smell loss rate of the virus type
+        :param year: The year for the simulation
+        :return: smell loss probability
+        """
+    data = load_smell_loss_data(year)
+
+    if year == 2021:
+        cases = load_case_data(year)
+
+        flavor_loss_data = data['Symptoms_changes_in_food_flavor']
+        flavor_loss_count = flavor_loss_data.sum()
+        flavor_loss_prob = (flavor_loss_count / cases)*100
+    else:
+        flavor_loss_prob = (data['CSQ100'] == 1).mean()
+
+    return flavor_loss_prob
+
+
 def load_smell_loss_data(year):
     """
     Loads the smell loss data from the csv file and returns it as a pandas dataframe
