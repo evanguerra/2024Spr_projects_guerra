@@ -25,12 +25,14 @@ class Person:
         self.infected_status = infected_status
         self.congenital_smell_loss_prob = 0.01
         self.smell_loss = False
+        self.taste_loss = False
+        self.flavor_loss = False
         self.is_smoker = False
 
         if np.random.rand() < self.congenital_smell_loss_prob:
             self.smell_loss = True
 
-    def get_infected(self, virus_type, smell_loss_prob, infection_prob):
+    def get_infected(self, virus_type, smell_loss_prob, infection_prob, taste_loss_prob, flavor_loss_prob):
         """
         Update the infected status of the person based on the infection rate and smell loss rate
         :param virus_type: The virus type of the person (either 'none', 'covid', or 'flu_cold'
@@ -38,10 +40,12 @@ class Person:
         :param infection_prob: The infection rate of the population
         :return: None
         """
+
         if np.random.rand() < infection_prob:
             self.infected_status = virus_type
-            if np.random.rand() < smell_loss_prob:
-                self.smell_loss = True
+            self.smell_loss = True if np.random.rand() < smell_loss_prob else False
+            self.taste_loss = True if np.random.rand() < taste_loss_prob else False
+            self.flavor_loss = True if np.random.rand() < flavor_loss_prob else False
 
     def reset_stats(self):
         """From Mr.Weible's Player class from
@@ -300,6 +304,8 @@ def run_simulation(population_size, num_iterations, transmission_distance=10, ye
         virus = 'flu_cold'
 
     smell_loss_probability = calculate_smell_loss_probability(year)
+    taste_loss_probability = calculate_taste_loss_probability(year)
+    flavor_loss_probability = calculate_flavor_loss_probability(year)
 
     for _ in range(population_size):
         age = np.random.randint(1, 101)
@@ -319,7 +325,8 @@ def run_simulation(population_size, num_iterations, transmission_distance=10, ye
                     if i != j:
                         if np.abs(person.location - other_person.location) <= transmission_distance:
                             if other_person.infected_status != 'none':
-                                person.get_infected(virus, smell_loss_probability, infection_prob)
+                                person.get_infected(virus, smell_loss_probability, infection_prob,
+                                                    taste_loss_probability, flavor_loss_probability)
 
         smell_loss_count = sum(person.smell_loss for person in population)
         total_population = len(population)
