@@ -5,7 +5,7 @@ import pandas as pd
 class Person:
     """
     A class to represent a person in the smell loss simulation
-    Inspired by Mr.Weible's Player class from
+    Inspired by Mr. Weible's Player class from
     https://github.com/iSchool-597PR/2024Spr_examples/blob/main/unit_08/MC_rock_paper_scissors.py
     """
     person_count = 0
@@ -13,10 +13,11 @@ class Person:
 
     def __init__(self, age, location, infected_status='none'):
         """
-        Initialize the person class with an age and a location and infected status
+        Initialize the Person class with age, location, and infected status
         :param age: The age of the person
         :param location: The starting location of the person
-        :param infected_status: The status of the infected person (either 'none', 'covid', or 'flu_cold'
+        :param infected_status: The status of the infected person
+            (either 'none', 'covid', or 'flu_cold')
         """
         Person.person_count += 1
         Person.all_persons.append(self)
@@ -36,9 +37,12 @@ class Person:
     def get_infected(self, virus_type, smell_loss_prob, infection_prob, taste_loss_prob, flavor_loss_prob):
         """
         Update the infected status of the person based on the infection rate and smell loss rate
-        :param virus_type: The virus type of the person (either 'none', 'covid', or 'flu_cold'
+        :param virus_type: The virus type of the person
+            (either 'none', 'covid', or 'flu_cold')
         :param smell_loss_prob: The smell loss rate of the population
         :param infection_prob: The infection rate of the population
+        :param taste_loss_prob: The taste loss rate of the population
+        :param flavor_loss_prob: The flavor loss rate of the population
         :return: None
         """
 
@@ -49,9 +53,7 @@ class Person:
             self.flavor_loss = True if np.random.rand() < flavor_loss_prob else False
 
     def reset_stats(self):
-        """From Mr.Weible's Player class from
-        https://github.com/iSchool-597PR/2024Spr_examples/blob/main/unit_08/MC_rock_paper_scissors.py
-        """
+        """Reset the statistics of a person"""
         self.infected_status = 'none'
         self.congenital_smell_loss_prob = 0.01
         self.smell_loss = False
@@ -62,19 +64,17 @@ class Person:
 
     @staticmethod
     def reset_all_stats():
-        """Resets all 'memory' or other counters in ALL Players, to prepare for
-        a new tournament unaffected by previous matches."""
+        """Reset statistics for all persons"""
         for p in Person.all_persons:
             p.reset_stats()
 
 
 def calculate_smoking_probability(year):
     """
-    Calculates the covid infection probability for a person
+    Calculate the smoking probability for a given year
     :param year: The year for the simulation
-    :return: covid infection probability
+    :return: Smoking probability
     """
-
     if year != 2021:
         data = load_smoking_data(year)
         smoking_data = data[
@@ -91,7 +91,7 @@ def calculate_smoking_probability(year):
 
 def start_smoking(population, year):
     """
-    Sets a person's is_smoker attribute to True for the percentage of the population calculated in calculate_smoking_probability() for that year
+    Set a person's is_smoker attribute to True for a percentage of the population
     :param population: The population of the simulation
     :param year: The year of the simulation
     :return: None
@@ -105,9 +105,9 @@ def start_smoking(population, year):
 
 def calculate_poverty_probability(year):
     """
-    Calculates the covid infection probability for a person
+    Calculate the poverty probability for a given year
     :param year: The year for the simulation
-    :return: covid infection probability
+    :return: Poverty probability
     """
     data = load_income_data(year)
     total_count = len(data)
@@ -120,7 +120,7 @@ def calculate_poverty_probability(year):
 
 def get_income(population, year):
     """
-    Sets a person's is_smoker attribute to True for the percentage of the population calculated in calculate_smoking_probability() for that year
+    Set a person's poverty attribute to True for a percentage of the population
     :param population: The population of the simulation
     :param year: The year of the simulation
     :return: None
@@ -134,23 +134,23 @@ def get_income(population, year):
 
 def calculate_covid_infection_probability(year):
     """
-    Calculates the covid infection probability for a person
+    Calculate the COVID-19 infection probability for a given year
     :param year: The year for the simulation
-    :return: covid infection probability
+    :return: COVID-19 infection probability
     """
-    cases, deaths = load_case_data(year)
+    cases, _ = load_case_data(year)
 
-    covid_prob = (cases / 333271411)*100  # 2020-2022 estimated US population from census.gov
+    covid_prob = (cases / 333271411) * 100  # 2020-2022 estimated US population from census.gov
 
     return covid_prob
 
 
 def calculate_non_covid_infection_probability(year):
     """
-        Calculates the non-covid infection probability for a person
-        :param year: The year for the simulation
-        :return: non-covid infection probability
-        """
+    Calculate the non-COVID-19 infection probability for a given year
+    :param year: The year for the simulation
+    :return: Non-COVID-19 infection probability
+    """
     data = load_smell_loss_data(year)
 
     non_covid_prob = (data['CSQ200'] == 1).mean()
@@ -160,18 +160,18 @@ def calculate_non_covid_infection_probability(year):
 
 def calculate_smell_loss_probability(year):
     """
-        Calculates the smell loss probability for a person based on the smell loss rate of the virus type
-        :param year: The year for the simulation
-        :return: smell loss probability
-        """
+    Calculate the smell loss probability for a given year
+    :param year: The year for the simulation
+    :return: Smell loss probability
+    """
     data = load_smell_loss_data(year)
 
     if year == 2021:
-        cases, deaths = load_case_data(year)
+        cases, _ = load_case_data(year)
 
         smell_loss_data = data['Symptoms_changes_in_smell']
         smell_loss_count = smell_loss_data.sum()
-        smell_loss_prob = (smell_loss_count / cases)*100
+        smell_loss_prob = (smell_loss_count / cases) * 100
     else:
         smell_loss_prob = (data['CSQ010'] == 1).mean()
 
@@ -180,14 +180,14 @@ def calculate_smell_loss_probability(year):
 
 def calculate_taste_loss_probability(year):
     """
-        Calculates the smell loss probability for a person based on the smell loss rate of the virus type
-        :param year: The year for the simulation
-        :return: smell loss probability
-        """
+    Calculate the taste loss probability for a given year
+    :param year: The year for the simulation
+    :return: Taste loss probability
+    """
     data = load_smell_loss_data(year)
 
     if year == 2021:
-        cases, deaths = load_case_data(year)
+        cases, _ = load_case_data(year)
 
         columns_to_check = ['Changes_in_basic_tastes_sweet', 'Changes_in_basic_tastes_salty',
                             'Changes_in_basic_tastes_sour', 'Changes_in_basic_tastes_bitter',
@@ -195,7 +195,7 @@ def calculate_taste_loss_probability(year):
         data['taste_loss'] = data[columns_to_check].any(axis=1).astype(int)
         taste_loss_data = data['taste_loss']
         taste_loss_count = taste_loss_data.sum()
-        taste_loss_prob = (taste_loss_count / cases)*100
+        taste_loss_prob = (taste_loss_count / cases) * 100
     else:
         taste_loss_prob = (data['CSQ080'] == 1).mean()
 
@@ -204,18 +204,18 @@ def calculate_taste_loss_probability(year):
 
 def calculate_flavor_loss_probability(year):
     """
-        Calculates the smell loss probability for a person based on the smell loss rate of the virus type
-        :param year: The year for the simulation
-        :return: smell loss probability
-        """
+    Calculate the flavor loss probability for a given year
+    :param year: The year for the simulation
+    :return: Flavor loss probability
+    """
     data = load_smell_loss_data(year)
 
     if year == 2021:
-        cases, deaths = load_case_data(year)
+        cases, _ = load_case_data(year)
 
         flavor_loss_data = data['Symptoms_changes_in_food_flavor']
         flavor_loss_count = flavor_loss_data.sum()
-        flavor_loss_prob = (flavor_loss_count / cases)*100
+        flavor_loss_prob = (flavor_loss_count / cases) * 100
     else:
         flavor_loss_prob = (data['CSQ100'] == 1).mean()
 
@@ -223,24 +223,30 @@ def calculate_flavor_loss_probability(year):
 
 
 def calculate_get_better_probability(year):
+    """
+    Calculate the probability of getting better for a given year
+    :param year: The year for the simulation
+    :return: Get better probability
+    """
     cases, deaths = load_case_data(year)
 
     if year == 2021:
-        get_better_prob = 100 - ((deaths/cases)*100)
+        get_better_prob = 100 - ((deaths / cases) * 100)
     elif year == 2011:
-        # data not available in downloadable format from https://archive.cdc.gov/
-        get_better_prob = (12447/9315621) * 100
+        # Data not available in downloadable format from https://archive.cdc.gov/
+        get_better_prob = (12447 / 9315621) * 100
     else:
-        # data not available in downloadable format from https://archive.cdc.gov/
-        get_better_prob = (37930/29739994)
+        # Data not available in downloadable format from https://archive.cdc.gov/
+        get_better_prob = (37930 / 29739994)
+
     return get_better_prob
 
 
 def load_smell_loss_data(year):
     """
-    Loads the smell loss data from the csv file and returns it as a pandas dataframe
+    Load smell loss data from the CSV file and return it as a pandas DataFrame
     :param year: The year for the simulation
-    :return: the dataframe
+    :return: The DataFrame containing smell loss data
     """
     if year == 2011:
         data = pd.read_csv('NHANES20112012/2011_smell_loss_data.csv')
@@ -256,9 +262,9 @@ def load_smell_loss_data(year):
 
 def load_income_data(year):
     """
-    Loads the smell loss data from the csv file and returns it as a pandas dataframe
+    Load income data from the CSV file and return it as a pandas DataFrame
     :param year: The year for the simulation
-    :return: the dataframe
+    :return: The DataFrame containing income data
     """
     if year == 2011:
         data = pd.read_csv('NHANES20112012/2011_income_data.csv')
@@ -272,9 +278,9 @@ def load_income_data(year):
 
 def load_smoking_data(year):
     """
-    Loads the smell loss data from the csv file and returns it as a pandas dataframe
+    Load smoking data from the CSV file and return it as a pandas DataFrame
     :param year: The year for the simulation
-    :return: the dataframe
+    :return: The DataFrame containing smoking data
     """
     if year == 2011:
         data = pd.read_csv('NHANES20112012/smoking_data.csv')
@@ -288,9 +294,9 @@ def load_smoking_data(year):
 
 def load_case_data(year):
     """
-    Loads the covid case data from the csv file and returns it as a pandas dataframe
+    Load COVID-19 case data from the CSV file and return the total cases and deaths
     :param year: The year for the simulation
-    :return: the dataframe
+    :return: Total cases and deaths
     """
     data = pd.read_csv('WHO-COVID-19-global-data.csv')
     data['Date_reported'] = pd.to_datetime(data['Date_reported'])
@@ -303,7 +309,7 @@ def load_case_data(year):
 
 def move_people(population):
     """
-    Move the people from one location to another
+    Move people from one location to another
     :param population: The population of the simulation
     """
     for person in population:
@@ -312,15 +318,16 @@ def move_people(population):
 
 def run_simulation(population_size, num_iterations, transmission_distance=10, year=2011, initial_infected=10):
     """
-    Run the simulation with the given population size and number of iterations and transmission distance
+    Run the simulation with the given parameters
     :param population_size: The population size of the simulation
     :param num_iterations: The number of iterations of the simulation
     :param transmission_distance: The transmission distance of the simulation
     :param year: The year of the simulation
     :param initial_infected: The initial infected persons in the simulation
-    :return: None
+    :return: Aggregate statistics and the ending population
     >>> np.random.seed(42)
-    >>> aggregate_stats, population = run_simulation(100, 10, transmission_distance=5, year=2011, initial_infected=10)  # doctest: +ELLIPSIS
+    >>> aggregate_statistics, pop = run_simulation(100, 10, transmission_distance=5,
+    ... year=2011, initial_infected=10)  # doctest: +ELLIPSIS
     Iteration   0: Smell Loss Percentage: ...
     Iteration   1: Smell Loss Percentage: ...
     Iteration   2: Smell Loss Percentage: ...
@@ -331,10 +338,11 @@ def run_simulation(population_size, num_iterations, transmission_distance=10, ye
     Iteration   7: Smell Loss Percentage: ...
     Iteration   8: Smell Loss Percentage: ...
     Iteration   9: Smell Loss Percentage: ...
-    >>> len(aggregate_stats), len(population) # doctest: +ELLIPSIS
+    >>> len(aggregate_statistics), len(pop) # doctest: +ELLIPSIS
     (10, ...)
     >>> np.random.seed(42)
-    >>> aggregate_stats, population = run_simulation(100, 10, transmission_distance=5, year=2021, initial_infected=10)  # doctest: +ELLIPSIS
+    >>> aggregate_statistics, pop = run_simulation(100, 10, transmission_distance=5,
+    ... year=2021, initial_infected=10)  # doctest: +ELLIPSIS
     Iteration   0: Smell Loss Percentage: ...
     Iteration   1: Smell Loss Percentage: ...
     Iteration   2: Smell Loss Percentage: ...
@@ -345,10 +353,11 @@ def run_simulation(population_size, num_iterations, transmission_distance=10, ye
     Iteration   7: Smell Loss Percentage: ...
     Iteration   8: Smell Loss Percentage: ...
     Iteration   9: Smell Loss Percentage: ...
-    >>> len(aggregate_stats), len(population) # doctest: +ELLIPSIS
+    >>> len(aggregate_statistics), len(pop) # doctest: +ELLIPSIS
     (10, ...)
     >>> np.random.seed(42)
-    >>> aggregate_stats, population = run_simulation(100, 10, transmission_distance=5, year=2019, initial_infected=10)  # doctest: +ELLIPSIS
+    >>> aggregate_statistics, pop = run_simulation(100, 10, transmission_distance=5,
+    ... year=2019, initial_infected=10)  # doctest: +ELLIPSIS
     Traceback (most recent call last):
     ...
     ValueError: Invalid year provided
@@ -360,7 +369,6 @@ def run_simulation(population_size, num_iterations, transmission_distance=10, ye
         infection_prob = calculate_covid_infection_probability(year)
         virus = 'covid'
     else:
-        # Define infection probability for non-covid virus
         infection_prob = calculate_non_covid_infection_probability(year)
         virus = 'flu_cold'
 
