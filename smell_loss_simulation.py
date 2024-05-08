@@ -109,10 +109,10 @@ def calculate_poverty_probability(year):
     :param year: The year for the simulation
     :return: covid infection probability
     """
-
     data = load_income_data(year)
     total_count = len(data)
-    poverty_count = (data['INDFMPIR'] == 5).sum()
+    poverty_data = data[data['INDFMPIR'] == 5]
+    poverty_count = len(poverty_data)
     poverty_prob = (poverty_count / total_count) * 100
 
     return poverty_prob
@@ -138,7 +138,7 @@ def calculate_covid_infection_probability(year):
     :param year: The year for the simulation
     :return: covid infection probability
     """
-    cases = load_case_data(year)
+    cases, deaths = load_case_data(year)
 
     covid_prob = (cases / 333271411)*100  # 2020-2022 estimated US population from census.gov
 
@@ -153,7 +153,7 @@ def calculate_non_covid_infection_probability(year):
         """
     data = load_smell_loss_data(year)
 
-    non_covid_prob = (data['CSQ020'] == 1).mean()
+    non_covid_prob = (data['CSQ200'] == 1).mean()
 
     return non_covid_prob
 
@@ -167,7 +167,7 @@ def calculate_smell_loss_probability(year):
     data = load_smell_loss_data(year)
 
     if year == 2021:
-        cases = load_case_data(year)
+        cases, deaths = load_case_data(year)
 
         smell_loss_data = data['Symptoms_changes_in_smell']
         smell_loss_count = smell_loss_data.sum()
@@ -187,7 +187,7 @@ def calculate_taste_loss_probability(year):
     data = load_smell_loss_data(year)
 
     if year == 2021:
-        cases = load_case_data(year)
+        cases, deaths = load_case_data(year)
 
         columns_to_check = ['Changes_in_basic_tastes_sweet', 'Changes_in_basic_tastes_salty',
                             'Changes_in_basic_tastes_sour', 'Changes_in_basic_tastes_bitter',
@@ -211,7 +211,7 @@ def calculate_flavor_loss_probability(year):
     data = load_smell_loss_data(year)
 
     if year == 2021:
-        cases = load_case_data(year)
+        cases, deaths = load_case_data(year)
 
         flavor_loss_data = data['Symptoms_changes_in_food_flavor']
         flavor_loss_count = flavor_loss_data.sum()
@@ -220,6 +220,20 @@ def calculate_flavor_loss_probability(year):
         flavor_loss_prob = (data['CSQ100'] == 1).mean()
 
     return flavor_loss_prob
+
+
+def calculate_get_better_probability(year):
+    cases, deaths = load_case_data(year)
+
+    if year == 2021:
+        get_better_prob = 100 - ((deaths/cases)*100)
+    elif year == 2011:
+        # data not available in downloadable format from https://archive.cdc.gov/
+        get_better_prob = (12447/9315621) * 100
+    else:
+        # data not available in downloadable format from https://archive.cdc.gov/
+        get_better_prob = (37930/29739994)
+    return get_better_prob
 
 
 def load_smell_loss_data(year):
@@ -282,8 +296,9 @@ def load_case_data(year):
     data['Date_reported'] = pd.to_datetime(data['Date_reported'])
     filtered_data = data[(data['Country'] == 'United States of America') & (data['Date_reported'].dt.year <= year)]
     cases = filtered_data['New_cases'].sum()
+    deaths = filtered_data['New_deaths'].sum()
 
-    return cases
+    return cases, deaths
 
 
 def move_people(population):
@@ -316,8 +331,8 @@ def run_simulation(population_size, num_iterations, transmission_distance=10, ye
     Iteration   7: Smell Loss Percentage: ...
     Iteration   8: Smell Loss Percentage: ...
     Iteration   9: Smell Loss Percentage: ...
-    >>> len(aggregate_stats), len(population)
-    (10, 100)
+    >>> len(aggregate_stats), len(population) # doctest: +ELLIPSIS
+    (10, ...)
     >>> np.random.seed(42)
     >>> aggregate_stats, population = run_simulation(100, 10, transmission_distance=5, year=2021, initial_infected=10)  # doctest: +ELLIPSIS
     Iteration   0: Smell Loss Percentage: ...
@@ -330,8 +345,8 @@ def run_simulation(population_size, num_iterations, transmission_distance=10, ye
     Iteration   7: Smell Loss Percentage: ...
     Iteration   8: Smell Loss Percentage: ...
     Iteration   9: Smell Loss Percentage: ...
-    >>> len(aggregate_stats), len(population)
-    (10, 100)
+    >>> len(aggregate_stats), len(population) # doctest: +ELLIPSIS
+    (10, ...)
     >>> np.random.seed(42)
     >>> aggregate_stats, population = run_simulation(100, 10, transmission_distance=5, year=2019, initial_infected=10)  # doctest: +ELLIPSIS
     Traceback (most recent call last):
@@ -352,6 +367,7 @@ def run_simulation(population_size, num_iterations, transmission_distance=10, ye
     smell_loss_probability = calculate_smell_loss_probability(year)
     taste_loss_probability = calculate_taste_loss_probability(year)
     flavor_loss_probability = calculate_flavor_loss_probability(year)
+    get_better_probability = calculate_get_better_probability(year)
 
     for _ in range(population_size):
         age = np.random.randint(1, 101)
@@ -366,6 +382,16 @@ def run_simulation(population_size, num_iterations, transmission_distance=10, ye
         move_people(population)
         if year != 2021:
             get_income(population, year)
+
+        for i, person in enumerate(population):
+            if person.infected_status != 'none':
+                if np.random.rand() < get_better_probability:
+                    person.infected_status = 'none'
+                    person.smell_loss = False
+                    person.taste_loss = False
+                    person.flavor_loss = False
+                else:
+                    population.pop(i)
 
         for i, person in enumerate(population):
             if person.infected_status == 'none':

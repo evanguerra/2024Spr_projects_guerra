@@ -5,10 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6eb82b7d-7934-4474-b96c-4256be8b007c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/NHANES20112012/2011_income_data.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/NHANES20112012/DEMO_G.XPT" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/NHANES20132014/2014_income_data.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/NHANES20132014/DEMO_H.XPT" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smell_loss_simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/smell_loss_simulation.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/smell_loss_simulation_visualization.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/smell_loss_simulation_visualization.ipynb" afterDir="false" />
@@ -77,6 +73,8 @@
       <workItem from="1715113080233" duration="8449000" />
       <workItem from="1715136539620" duration="5837000" />
       <workItem from="1715143826660" duration="1183000" />
+      <workItem from="1715177310397" duration="2107000" />
+      <workItem from="1715179766552" duration="1135000" />
     </task>
     <servers />
   </component>
@@ -87,7 +85,7 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/2024Spr_projects_guerra$Doctests_in_smell_loss_simulation.coverage" NAME="Doctests in smell_loss_simulation Coverage Results" MODIFIED="1715143449512" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/2024Spr_projects_guerra$Doctests_in_smell_loss_simulation.coverage" NAME="Doctests in smell_loss_simulation Coverage Results" MODIFIED="1715180740334" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/2024Spr_projects_guerra$smell_loss_simulation.coverage" NAME="smell_loss_simulation Coverage Results" MODIFIED="1714533589288" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
