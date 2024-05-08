@@ -28,6 +28,7 @@ class Person:
         self.taste_loss = False
         self.flavor_loss = False
         self.is_smoker = False
+        self.poverty = False
 
         if np.random.rand() < self.congenital_smell_loss_prob:
             self.smell_loss = True
@@ -100,6 +101,35 @@ def start_smoking(population, year):
 
     for person in population[:num_smokers]:
         person.is_smoker = True
+
+
+def calculate_poverty_probability(year):
+    """
+    Calculates the covid infection probability for a person
+    :param year: The year for the simulation
+    :return: covid infection probability
+    """
+
+    data = load_income_data(year)
+    total_count = len(data)
+    poverty_count = (data['INDFMPIR'] == 5).sum()
+    poverty_prob = (poverty_count / total_count) * 100
+
+    return poverty_prob
+
+
+def get_income(population, year):
+    """
+    Sets a person's is_smoker attribute to True for the percentage of the population calculated in calculate_smoking_probability() for that year
+    :param population: The population of the simulation
+    :param year: The year of the simulation
+    :return: None
+    """
+    poverty_prob = calculate_poverty_probability(year)
+    num_poverty = int(len(population) * (poverty_prob / 100))
+
+    for person in population[:num_poverty]:
+        person.poverty = True
 
 
 def calculate_covid_infection_probability(year):
@@ -204,6 +234,22 @@ def load_smell_loss_data(year):
         data = pd.read_csv('NHANES20132014/2014_smell_loss_data.csv')
     elif year == 2021:
         data = pd.read_csv('GCCR002/data-clean.csv')
+    else:
+        raise ValueError("Invalid year provided")
+
+    return data
+
+
+def load_income_data(year):
+    """
+    Loads the smell loss data from the csv file and returns it as a pandas dataframe
+    :param year: The year for the simulation
+    :return: the dataframe
+    """
+    if year == 2011:
+        data = pd.read_csv('NHANES20112012/2011_income_data.csv')
+    elif year == 2014:
+        data = pd.read_csv('NHANES20132014/2014_income_data.csv')
     else:
         raise ValueError("Invalid year provided")
 
@@ -318,6 +364,8 @@ def run_simulation(population_size, num_iterations, transmission_distance=10, ye
     for _ in range(num_iterations):
         start_smoking(population, year)
         move_people(population)
+        if year != 2021:
+            get_income(population, year)
 
         for i, person in enumerate(population):
             if person.infected_status == 'none':
